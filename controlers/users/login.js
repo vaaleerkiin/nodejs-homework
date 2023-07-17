@@ -12,7 +12,6 @@ const login = async (req, res, next) => {
     throw HttpError(401, "Email or password is wrong");
   }
   const passwordCompare = await bcrypt.compare(password, user.password);
-  console.log(user);
   if (!passwordCompare) {
     throw HttpError(401, "Email or password is wrong");
   }
@@ -23,7 +22,7 @@ const login = async (req, res, next) => {
 
   res.status(201).json({
     token,
-    user: { name: user.name, password: user.password },
+    user: { name: user.name, email: user.email },
   });
 };
 
