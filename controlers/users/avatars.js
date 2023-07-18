@@ -2,7 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const { User, defaultAvatar } = require("../../models/user");
 
-const booksDir = path.join(__dirname, "../", "../", "public", "books");
+const booksDir = path.join(__dirname, "../", "../", "public", "avatars");
 
 const avatars = async (req, res, next) => {
   const { path: tempUpload, originalname } = req.file;
@@ -12,7 +12,7 @@ const avatars = async (req, res, next) => {
 
   const resultUpload = path.join(booksDir, newName);
   await fs.rename(tempUpload, resultUpload);
-  const cover = path.join("books", newName);
+  const cover = path.join("avatars", newName);
 
   if (user.avatarURL !== defaultAvatar) {
     const prevAvatar = path.join(booksDir, "../", user.avatarURL);
