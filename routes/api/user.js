@@ -1,7 +1,7 @@
 const express = require("express");
 const { shema } = require("../../models/user");
 const ctrl = require("../../controlers/users");
-const { validateBody, Authenticate } = require("../../middlewares");
+const { validateBody, Authenticate, upload } = require("../../middlewares");
 const router = express.Router();
 
 router.post("/register", validateBody(shema.registerShema), ctrl.register);
@@ -18,5 +18,7 @@ router.patch(
   validateBody(shema.updateSubscriptionSchema),
   ctrl.subscription
 );
+
+router.patch("/avatars", Authenticate, upload.single("avatar"), ctrl.avatars);
 
 module.exports = router;
