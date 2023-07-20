@@ -1,7 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
 const { User, defaultAvatar } = require("../../models/user");
-
 const booksDir = path.join(__dirname, "../", "../", "public", "avatars");
 
 const avatars = async (req, res, next) => {
