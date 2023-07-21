@@ -21,4 +21,8 @@ router.patch(
 
 router.patch("/avatars", Authenticate, upload.single("avatar"), ctrl.avatars);
 
+router.post("/verify", validateBody(shema.verifyShema), ctrl.verify);
+
+router.get("/verify/:verificationToken", ctrl.verifyToken);
+
 module.exports = router;

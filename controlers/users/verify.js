@@ -1,23 +1,16 @@
 const { HttpError, sendMail } = require("../../helpers");
 const { User } = require("../../models/user");
-const bcrypt = require("bcrypt");
-const { v4: uuidv4 } = require("uuid");
 const { BASE_URL } = process.env;
 
-const register = async (req, res, next) => {
-  const { email, name, password } = req.body;
+const verify = async (req, res, next) => {
+  const { email } = req.body;
   const user = await User.findOne({ email });
-  if (user) {
-    throw HttpError(409, "Email in use");
+
+  if (!user || user.verify) {
+    throw HttpError(404);
   }
-  const hashPass = await bcrypt.hash(password, 10);
-  const verificationToken = uuidv4();
-  await User.create({
-    name,
-    email,
-    password: hashPass,
-    verificationToken,
-  });
+
+  const verificationToken = user.verificationToken;
 
   await sendMail({
     to: email,
@@ -41,7 +34,6 @@ const register = async (req, res, next) => {
 >
 `,
   });
-  res.status(201).json({ user: { name, email } });
+  res.status(200).json({ message: "Verification email sent" });
 };
-
-module.exports = register;
+module.exports = verify;
