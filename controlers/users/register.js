@@ -1,8 +1,7 @@
-const { HttpError, sendMail } = require("../../helpers");
+const { HttpError, sendMail, mailMurkup } = require("../../helpers");
 const { User } = require("../../models/user");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
-const { BASE_URL } = process.env;
 
 const register = async (req, res, next) => {
   const { email, name, password } = req.body;
@@ -22,24 +21,7 @@ const register = async (req, res, next) => {
   await sendMail({
     to: email,
     subject: "Verify email",
-    html: `
-    <a
-    style="
-    margin-left: auto;
-    margin-right: auto;
-    text-decoration: none;
-    background-color: rgb(58, 58, 214);
-    color: white;
-    padding: 18px;
-    display: grid;
-    width: 200px;
-    text-align: center;
-    border-radius: 5px;
-  "
-  href="${BASE_URL}/api/users/verify/${verificationToken}"
-  >Verify <strong>${email}</strong></a
->
-`,
+    html: mailMurkup(verificationToken),
   });
   res.status(201).json({ user: { name, email } });
 };
