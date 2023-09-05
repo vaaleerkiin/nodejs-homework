@@ -16,7 +16,7 @@ const avatars = async (req, res, next) => {
 
   if (user.avatarURL !== defaultAvatar) {
     const prevAvatar = path.join(booksDir, "../", user.avatarURL);
-    await fs.unlink(prevAvatar);
+    fs.unlink(prevAvatar).catch(console.log);
   }
   await User.findByIdAndUpdate(_id, { avatarURL: cover });
   res.status(201).json({ message: cover });
