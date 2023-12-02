@@ -1,7 +1,11 @@
-const { User } = require("../../models/user");
+const prisma = require("../../prisma");
+
 const logout = async (req, res, next) => {
-  const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: "" });
+  const { id } = req.user;
+  await prisma.user.update({
+    where: { id },
+    data: { token: "" },
+  });
 
   res.json({
     message: "Logout success",

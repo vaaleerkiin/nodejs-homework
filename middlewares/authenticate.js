@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { HttpError } = require("../helpers");
-const { User } = require("../models/user");
+const prisma = require("../prisma");
 const { SECRET } = process.env;
 
 const Authenticate = async (req, res, next) => {
@@ -12,7 +12,8 @@ const Authenticate = async (req, res, next) => {
     }
     try {
       const { id } = jwt.verify(token, SECRET);
-      const user = await User.findById(id);
+      // const user = await User.findById(id);
+      const user = await prisma.user.findUnique({ where: { id} });
       if (!user || !user.token || user.token !== token) {
         throw HttpError(401);
       }

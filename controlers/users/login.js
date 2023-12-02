@@ -1,13 +1,15 @@
 const { HttpError } = require("../../helpers");
-const { User } = require("../../models/user");
+// const { User } = require("../../scheme/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const prisma = require("../../prisma");
 const { SECRET } = process.env;
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
 
+  const user = await prisma.user.findUnique({ where: { email: email } });
+  console.log(user);
   // if (!user && !user.verify) {
   //   throw HttpError(401, "Email or password is wrong");
   // }
@@ -19,10 +21,11 @@ const login = async (req, res, next) => {
   if (!passwordCompare) {
     throw HttpError(401, "Email or password is wrong");
   }
-  const payload = { id: user._id };
+  const payload = { id: user.id };
 
   const token = jwt.sign(payload, SECRET, { expiresIn: "30d" });
-  await User.findByIdAndUpdate(user._id, { token });
+
+  await prisma.user.update({ where: { id: user.id }, data: {  token } });
 
   res.status(201).json({
     token,

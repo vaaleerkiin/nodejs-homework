@@ -1,9 +1,9 @@
 const { HttpError, sendMail, mailMurkup } = require("../../helpers");
-const { User } = require("../../models/user");
+const prisma = require("../../prisma");
 
 const verify = async (req, res, next) => {
   const { email } = req.body;
-  const user = await User.findOne({ email });
+  const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user || user.verify) {
     throw HttpError(404);

@@ -1,15 +1,16 @@
 const { HttpError } = require("../../helpers");
-const { User } = require("../../models/user");
+const prisma = require("../../prisma");
 
 const subscription = async (req, res, next) => {
-  const result = await User.findByIdAndUpdate(req.user._id, req.body, {
-    new: true,
+  const result = await prisma.user.update({
+    where: { id: req.user.id },
+    data: req.body,
   });
   if (!result) {
     throw HttpError(404, "Not found");
   }
 
-  res.json(result);
+  res.json({ subscription: result.subscription });
 };
 
 module.exports = subscription;

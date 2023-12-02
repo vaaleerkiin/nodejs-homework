@@ -1,15 +1,13 @@
 const { HttpError } = require("../../helpers");
-const { Contact } = require("../../models/contact");
+const prisma = require("../../prisma");
 
 const updateStatusContact = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await Contact.findOneAndUpdate(
-    { _id: contactId, owner: req.user._id },
-    req.body,
-    {
-      new: true,
-    }
-  );
+
+  const result = await prisma.contact.update({
+    where: { id: contactId, owner: req.user.id },
+    data: req.body,
+  });
   if (!result) {
     throw HttpError(404, "Not found");
   }

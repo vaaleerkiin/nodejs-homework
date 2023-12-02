@@ -1,5 +1,5 @@
 const express = require("express");
-const { shema } = require("../../models/user");
+const { shema } = require("../../scheme/user");
 const ctrl = require("../../controlers/users");
 const { validateBody, Authenticate, upload } = require("../../middlewares");
 const router = express.Router();
